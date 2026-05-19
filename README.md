@@ -38,13 +38,27 @@ Simulateur B2B de calcul du coût caché de l'aidance en entreprise. Outil de le
 
 ## 🚀 Déploiement
 
-### Netlify (méthode actuelle)
+### Vercel (recommandé ⭐)
+1. Va sur https://vercel.com/new
+2. Connecte ton compte GitHub
+3. Sélectionne ce repo
+4. Clique **Deploy** — c'est prêt en 2 min !
+5. URL : `https://simulateur-cout-aidant.vercel.app`
+
+👉 **Guide complet** : [`docs/DEPLOYMENT_VERCEL.md`](docs/DEPLOYMENT_VERCEL.md)
+
+### Netlify (alternative)
 1. Drag & drop `index.html` sur [app.netlify.com/drop](https://app.netlify.com/drop)
 2. Ou connecter ce repo GitHub à Netlify pour auto-deploy
 
-### Webflow (iframe)
+### Webflow (intégration iframe)
 ```html
-<iframe src="https://votre-site.netlify.app" width="100%" height="800" frameborder="0"></iframe>
+<iframe 
+  src="https://simulateur-cout-aidant.vercel.app" 
+  width="100%" 
+  height="800" 
+  style="border: none; border-radius: 24px;"
+></iframe>
 ```
 
 ## 📧 Configuration EmailJS
