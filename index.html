@@ -25,6 +25,27 @@
     input::placeholder { color: #6B7280; }
     button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
   </style>
+  <script>
+    // Auto-resize iframe pour embed Webflow
+    function sendHeightToParent() {
+      try {
+        const height = Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.offsetHeight
+        );
+        if (window.parent !== window) {
+          window.parent.postMessage({ type: 'vivalea-resize', height: height }, '*');
+        }
+      } catch(e) {}
+    }
+    window.addEventListener('load', sendHeightToParent);
+    setInterval(sendHeightToParent, 300);
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(sendHeightToParent).observe(document.documentElement);
+    }
+  </script>
 </head>
 <body>
   <div id="root"></div>
