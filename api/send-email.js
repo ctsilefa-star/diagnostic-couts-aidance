@@ -202,6 +202,7 @@ export default async function handler(req, res) {
     }, "INTERNAL");
     
     if (!internal.ok) {
+      console.error(`FAIL_INTERNAL status=${internal.status} err=${JSON.stringify(internal.result).slice(0,300)}`);
       return res.status(500).json({ error: "Internal email failed", details: internal.result });
     }
     
@@ -216,17 +217,20 @@ export default async function handler(req, res) {
     }, "PROSPECT");
     
     if (!prospect.ok) {
+      // ⚠️ Log très visible avec toute l'info pour debug
+      console.error(`FAIL_PROSPECT to=${data.email} status=${prospect.status} err=${JSON.stringify(prospect.result).slice(0,400)}`);
       return res.status(207).json({
         ok: true, internalSent: true, prospectFailed: true,
         prospectError: prospect.result, internalId: internal.result.id,
       });
     }
     
+    console.log(`OK internal=${internal.result.id} prospect=${prospect.result.id}`);
     return res.status(200).json({
       ok: true, internalId: internal.result.id, prospectId: prospect.result.id,
     });
   } catch (err) {
-    console.error("Send error:", err.message, err.stack);
+    console.error(`EXCEPTION ${err.message} ${(err.stack || "").slice(0, 200)}`);
     return res.status(500).json({ error: err.message });
   }
 }
