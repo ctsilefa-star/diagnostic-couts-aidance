@@ -215,19 +215,14 @@ export default async function handler(req, res) {
       html: buildProspectEmail(data),
     }, "PROSPECT");
     
-    // 🔬 LOG UNIQUE FINAL avec tout (pour Vercel logs tronqués)
-    const summary = `SUM i=${internal.status} p=${prospect.status} pTo=${data.email} pOk=${prospect.ok} pErr=${prospect.ok ? "none" : JSON.stringify(prospect.result).slice(0,300)}`;
-    
     if (!prospect.ok) {
-      console.error(summary);
+      console.error(`PROSPECT_FAIL status=${prospect.status} to=${data.email}`);
       return res.status(207).json({
         ok: true, internalSent: true, prospectFailed: true,
         prospectError: prospect.result, internalId: internal.result.id,
-        debugSummary: summary,
       });
     }
     
-    console.log(summary);
     return res.status(200).json({
       ok: true, internalId: internal.result.id, prospectId: prospect.result.id,
     });
