@@ -179,38 +179,45 @@ export default async function handler(req, res) {
   if (!RESEND_API_KEY) return res.status(500).json({ error: "RESEND_API_KEY not configured" });
   const FROM = process.env.RESEND_FROM || "Vivalea Care <onboarding@resend.dev>";
   const INTERNAL_TO = process.env.INTERNAL_EMAIL || "ctsilefa@vivalea.fr";
+  
   try {
-    const internalRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM, to: [INTERNAL_TO], reply_to: data.email,
+    // ── ENVOI BATCH : les 2 emails dans une seule requête API ──────────
+    const batchPayload = [
+      {
+        from: FROM,
+        to: [INTERNAL_TO],
+        reply_to: data.email,
         subject: `🎯 Nouveau lead Diagnostic — ${data.entreprise} (${data.secteur})`,
         html: buildInternalEmail(data),
-      }),
-    });
-    const internalResult = await internalRes.json();
-    if (!internalRes.ok) {
-      console.error("Internal email failed:", internalResult);
-      return res.status(500).json({ error: "Internal email failed", details: internalResult });
-    }
-    const prospectRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM, to: [data.email], reply_to: INTERNAL_TO,
+      },
+      {
+        from: FROM,
+        to: [data.email],
+        reply_to: INTERNAL_TO,
         subject: `Votre Diagnostic Vivalea Care — ${data.entreprise}`,
         html: buildProspectEmail(data),
-      }),
+      },
+    ];
+    
+    console.log("Sending batch to:", [INTERNAL_TO, data.email]);
+    
+    const batchRes = await fetch("https://api.resend.com/emails/batch", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+      body: JSON.stringify(batchPayload),
     });
-    const prospectResult = await prospectRes.json();
-    if (!prospectRes.ok) {
-      console.warn("Prospect email failed:", prospectResult);
-      return res.status(200).json({ ok: true, prospectFailed: true, details: prospectResult });
+    
+    const batchResult = await batchRes.json();
+    
+    if (!batchRes.ok) {
+      console.error("Resend batch failed:", JSON.stringify(batchResult));
+      return res.status(500).json({ error: "Resend batch failed", details: batchResult });
     }
-    return res.status(200).json({ ok: true, internalId: internalResult.id, prospectId: prospectResult.id });
+    
+    console.log("Batch sent successfully:", JSON.stringify(batchResult));
+    return res.status(200).json({ ok: true, data: batchResult.data });
   } catch (err) {
-    console.error("Send error:", err);
+    console.error("Send error:", err.message, err.stack);
     return res.status(500).json({ error: err.message });
   }
 }
