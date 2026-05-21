@@ -189,7 +189,6 @@ export default async function handler(req, res) {
       body: JSON.stringify(payload),
     });
     const result = await resp.json();
-    console.log(`[${label}] status=${resp.status} result=${JSON.stringify(result)}`);
     return { ok: resp.ok, status: resp.status, result };
   }
   
@@ -202,11 +201,11 @@ export default async function handler(req, res) {
     }, "INTERNAL");
     
     if (!internal.ok) {
-      console.error(`FAIL_INTERNAL status=${internal.status} err=${JSON.stringify(internal.result).slice(0,300)}`);
+      console.error(`X FAIL i=${internal.status} ${JSON.stringify(internal.result).slice(0,400)}`);
       return res.status(500).json({ error: "Internal email failed", details: internal.result });
     }
     
-    // ⏱️ Délai pour respecter le rate-limit Resend (2 req/sec en gratuit)
+    // ⏱️ Délai pour respecter le rate-limit Resend
     await sleep(700);
     
     // 2️⃣ Email PROSPECT
@@ -216,21 +215,24 @@ export default async function handler(req, res) {
       html: buildProspectEmail(data),
     }, "PROSPECT");
     
+    // 🔬 LOG UNIQUE FINAL avec tout (pour Vercel logs tronqués)
+    const summary = `SUM i=${internal.status} p=${prospect.status} pTo=${data.email} pOk=${prospect.ok} pErr=${prospect.ok ? "none" : JSON.stringify(prospect.result).slice(0,300)}`;
+    
     if (!prospect.ok) {
-      // ⚠️ Log très visible avec toute l'info pour debug
-      console.error(`FAIL_PROSPECT to=${data.email} status=${prospect.status} err=${JSON.stringify(prospect.result).slice(0,400)}`);
+      console.error(summary);
       return res.status(207).json({
         ok: true, internalSent: true, prospectFailed: true,
         prospectError: prospect.result, internalId: internal.result.id,
+        debugSummary: summary,
       });
     }
     
-    console.log(`OK internal=${internal.result.id} prospect=${prospect.result.id}`);
+    console.log(summary);
     return res.status(200).json({
       ok: true, internalId: internal.result.id, prospectId: prospect.result.id,
     });
   } catch (err) {
-    console.error(`EXCEPTION ${err.message} ${(err.stack || "").slice(0, 200)}`);
+    console.error(`EXC ${err.message}`);
     return res.status(500).json({ error: err.message });
   }
 }
