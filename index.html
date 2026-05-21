@@ -10,6 +10,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.6/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+  <script>
+    // Fallback CDN si cdnjs bloqué (adblocker, indisponibilité)
+    if (typeof window.jspdf === 'undefined') {
+      var jsPdfScript = document.createElement('script');
+      jsPdfScript.src = 'https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js';
+      jsPdfScript.async = false;
+      document.head.appendChild(jsPdfScript);
+    }
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #F8F6F4; }
@@ -186,6 +195,10 @@
 
       /* ─── Generate PDF ─── */
       const genPDF = (res, withLead) => {
+        if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
+          alert("Le téléchargement PDF est temporairement indisponible. Cela peut être dû à un bloqueur (adblocker, extension de navigateur) qui empêche le chargement de la librairie. Essayez de désactiver vos extensions ou de recharger la page.");
+          throw new Error("jsPDF library not available");
+        }
         const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:"mm",format:"a4"}); const W=210,M=18; const sec=data.secteur==="Autre"?data.secteurAutre:data.secteur; let y=20;
         // Header
         doc.setFillColor(248,246,244); doc.rect(0,0,W,42,"F");
@@ -256,8 +269,6 @@
       const handleSubmit = async () => {
         if(!validate(4))return; setSending(true);
         const r=calc(); const sec=data.secteur==="Autre"?data.secteurAutre:data.secteur;
-        // Generate + auto-download PDF
-        try { const pdf=genPDF(r,false); pdf.save(`Diagnostic-Aidance-${data.entreprise.replace(/\s+/g,"-")}.pdf`); } catch(err){ console.log("PDF:",err); }
         // Payload Resend (Vercel Function)
         const payload={nom:data.nom,entreprise:data.entreprise,secteur:sec,fonction:data.fonction,effectif:data.effectif,tranche_age:AGE_OPTIONS.find(a=>a.value===data.trancheAge)?.label||"",salaire_moyen:fmt(Number(data.salaireMoyen)),taux_absenteisme:data.tauxAbsenteisme,nb_departs:data.nbDeparts,email:data.email,n_aidants:r.nAidants,fuite_financiere:fmt(r.fuiteFinanciere),roi_total:fmt(r.roiTotal),score_csrd:r.scoreCsrd,roi_pct:r.roiPct,roi_absenteisme:fmt(r.roiAbsenteisme),roi_presenteisme:fmt(r.roiPresenteisme),roi_turnover:fmt(r.roiTurnover),roi_desorganisation:fmt(r.roiDesorganisation),roi_rps:fmt(r.roiRps),roi_marque:fmt(r.roiMarque),investissement:fmt(r.investissement),nb_contrats:r.nbContrats,culture_manager:MANAGER_OPTIONS.find(m=>m.value===data.cultureManager)?.label||"",dispositifs:data.dispositifs.map(d=>DISPOSITIFS.find(x=>x.value===d)?.label).join(", "),pilotage_data:data.pilotageData==="oui"?"Oui":"Non",mesures_csrd:data.mesuresCsrd.map(m=>MESURES_CSRD.find(x=>x.value===m)?.label).join(", ")+(data.mesuresCsrdAutre?" | Autre : "+data.mesuresCsrdAutre:""),contrat_creche:data.contratCreche==="oui"?"✅ OUI — Opportunité Care":"Non"};
         // Envoi via Vercel Function (Resend) — 1 seul appel pour les 2 emails
