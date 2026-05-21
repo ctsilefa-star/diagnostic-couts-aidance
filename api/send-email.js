@@ -1,4 +1,4 @@
-// /api/send-email.js — Vercel Function pour le Diagnostic Coût Aidant (Resend + notif.vivalea.fr)
+// /api/send-email.js — Vivalea Diagnostic (Resend + notif.vivalea.fr) - 1779352569
 // Templates harmonisés avec MaPrimeAdapt' (même structure, mêmes couleurs)
 
 const fmt = (n) => new Intl.NumberFormat("fr-FR").format(Math.round(Number(n) || 0));
