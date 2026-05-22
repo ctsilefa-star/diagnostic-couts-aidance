@@ -255,9 +255,9 @@
         // Investissement
         doc.setFontSize(11); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("L'ÉQUATION VIVALEA CARE",M,y); y+=6;
         doc.setFontSize(10); doc.setTextColor(24,38,63);
-        doc.text(`Investissement : ${fmt(res.investissement)} €/an`,M,y); doc.text(`ROI : ${res.roiPct}%`,W/2,y); y+=5;
+        doc.text(`Investissement Vivalea (à partir de) : ${fmt(res.investissement)} €/an`,M,y); doc.text(`ROI : ${res.roiPct}%`,W/2,y); y+=5;
         doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.setTextColor(107,114,128);
-        doc.text(`${res.nbContrats} contrats × 180 €/mois · Retour constaté dès 6 mois`,M,y); y+=10;
+        doc.text(`Retour sur investissement constaté dès 6 mois`,M,y); y+=10;
         // Footer
         doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=6;
         doc.setFontSize(7); doc.setTextColor(107,114,128); doc.setFont("helvetica","normal");
@@ -378,13 +378,23 @@
 
                 <div style={s.divider}/>
 
-                {/* SECTION 7 — Rappel du coût / Prix à partir de */}
-                <div style={{textAlign:"center",marginBottom:20,padding:"22px 18px",background:COLORS.magentaLight,borderRadius:14,border:`1px solid ${COLORS.magenta}30`}}>
-                  <div style={{fontSize:13,color:COLORS.magenta,fontWeight:700,marginBottom:8,textTransform:"uppercase",letterSpacing:0.5}}>💼 Accompagnement Vivalea Care</div>
-                  <div style={{fontSize:13,color:COLORS.textMuted,marginBottom:4}}>À partir de</div>
-                  <div style={{fontFamily:"'DM Serif Display',serif",fontSize:isMobile?32:42,color:COLORS.magenta,fontWeight:700,lineHeight:1.1}}>180 €<span style={{fontSize:18,color:COLORS.textMuted,fontWeight:400}}> /mois</span></div>
-                  <div style={{fontSize:12,color:COLORS.textMuted,marginTop:6}}>par salarié aidant accompagné</div>
-                  <div style={{fontSize:11,color:COLORS.textMuted,marginTop:12,padding:"10px 12px",background:"#FFF",borderRadius:8,lineHeight:1.5}}>Solution dédiée aux salariés aidants : écoute, orientation, accompagnement personnalisé pour réduire absentéisme et désengagement.</div>
+                {/* SECTION 7 — Investissement Vivalea + ROI */}
+                <div style={{marginBottom:20,padding:"22px 18px",background:COLORS.magentaLight,borderRadius:14,border:`1px solid ${COLORS.magenta}30`}}>
+                  <div style={{fontSize:13,color:COLORS.magenta,fontWeight:700,marginBottom:16,textTransform:"uppercase",letterSpacing:0.5,textAlign:"center"}}>💼 L'équation Vivalea Care</div>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr auto 1fr",gap:isMobile?12:10,alignItems:"center"}}>
+                    <div style={{padding:"18px 16px",background:"#FFF",borderRadius:12,textAlign:"center"}}>
+                      <div style={{fontSize:12,color:COLORS.textMuted,marginBottom:4}}>Investissement Vivalea</div>
+                      <div style={{fontSize:11,color:COLORS.textMuted,marginBottom:4}}>à partir de</div>
+                      <div style={{fontFamily:"'DM Serif Display',serif",fontSize:isMobile?26:30,color:COLORS.navy,fontWeight:700,lineHeight:1.1}}>{fmt(r.investissement)} €<span style={{fontSize:14,color:COLORS.textMuted,fontWeight:400}}> /an</span></div>
+                    </div>
+                    <div style={{fontSize:26,color:COLORS.magenta,textAlign:"center",fontWeight:700}}>{isMobile?"↓":"→"}</div>
+                    <div style={{padding:"18px 16px",background:COLORS.magenta,borderRadius:12,textAlign:"center"}}>
+                      <div style={{fontSize:12,color:"#FFF",opacity:0.9,marginBottom:4}}>Retour sur investissement</div>
+                      <div style={{fontFamily:"'DM Serif Display',serif",fontSize:isMobile?32:40,color:"#FFF",fontWeight:700,lineHeight:1.1}}>{r.roiPct}%</div>
+                      <div style={{fontSize:11,color:"#FFF",opacity:0.9,marginTop:4}}>dès la 1ère année</div>
+                    </div>
+                  </div>
+                  <div style={{fontSize:11,color:COLORS.textMuted,marginTop:16,padding:"10px 12px",background:"#FFF",borderRadius:8,lineHeight:1.5,textAlign:"center"}}>Solution dédiée aux salariés aidants : écoute, orientation, accompagnement personnalisé pour réduire absentéisme et désengagement. Retour constaté dès 6 mois.</div>
                 </div>
 
                 {/* SECTION 8 — CTAs */}

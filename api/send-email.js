@@ -147,12 +147,23 @@ function buildProspectEmail(d) {
     </div>
     <div style="font-size:12px;color:${C.muted};margin-top:14px;line-height:1.5;">Avec l'accompagnement Vivalea Care : formation managers, dispositifs structurés et pilotage KPI sociaux. Conformité ESRS S1 acquise.</div>
   `)}
-  ${section("💼", "Accompagnement Vivalea Care", `
-    <div style="text-align:center;padding:8px 0;">
-      <div style="font-size:13px;color:${C.muted};margin-bottom:4px;">À partir de</div>
-      <div style="font-size:38px;font-weight:700;color:${C.magenta};line-height:1.1;">180 €<span style="font-size:16px;color:${C.muted};font-weight:400;"> /mois</span></div>
-      <div style="font-size:12px;color:${C.muted};margin-top:6px;">par salarié aidant accompagné</div>
-    </div>
+  ${section("💼", "L'équation Vivalea Care", `
+    <table style="width:100%;border-collapse:collapse;">
+      <tr>
+        <td style="width:46%;background:${C.white};border-radius:12px;padding:18px 14px;text-align:center;vertical-align:middle;">
+          <div style="font-size:12px;color:${C.muted};margin-bottom:4px;">Investissement Vivalea</div>
+          <div style="font-size:11px;color:${C.muted};margin-bottom:4px;">à partir de</div>
+          <div style="font-size:26px;font-weight:700;color:${C.navy};line-height:1.1;">${esc(d.investissement)} €<span style="font-size:13px;color:${C.muted};font-weight:400;"> /an</span></div>
+        </td>
+        <td style="width:8%;text-align:center;font-size:24px;color:${C.magenta};font-weight:700;">→</td>
+        <td style="width:46%;background:${C.magenta};border-radius:12px;padding:18px 14px;text-align:center;vertical-align:middle;">
+          <div style="font-size:12px;color:#FFF;opacity:0.9;margin-bottom:4px;">Retour sur investissement</div>
+          <div style="font-size:34px;font-weight:700;color:#FFF;line-height:1.1;">${esc(d.roi_pct)}%</div>
+          <div style="font-size:11px;color:#FFF;opacity:0.9;margin-top:4px;">dès la 1ère année</div>
+        </td>
+      </tr>
+    </table>
+    <div style="font-size:12px;color:${C.muted};margin-top:14px;text-align:center;line-height:1.5;">Solution dédiée aux salariés aidants : écoute, orientation, accompagnement personnalisé. Retour constaté dès 6 mois.</div>
   `, C.bg)}
   <div style="padding:28px 32px;text-align:center;">
     <a href="https://calendly.com/vivalea" style="display:inline-block;background:${C.magenta};color:${C.white};padding:16px 32px;border-radius:10px;text-decoration:none;font-weight:600;font-size:15px;">Prendre un moment pour détailler ensemble votre simulation →</a>
