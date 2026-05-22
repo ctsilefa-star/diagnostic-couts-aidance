@@ -58,8 +58,7 @@
 </head>
 <body>
   <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useRef } = React;
+  <script type="text/babel">const { useState, useRef } = React;
 
     const COLORS = {
       magenta: "#8F1349", magentaLight: "#8F134915", magentaHover: "#7A1040",
@@ -236,7 +235,7 @@
         doc.setFontSize(11); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("ROI RÉCUPÉRABLE PAR POSTE",M,y); y+=6;
         [["Absentéisme",res.roiAbsenteisme,"Malakoff Humanis 2025"],["Présentéisme",res.roiPresenteisme,"OCIRP/Viavoice 2023"],["Turnover",res.roiTurnover,"Deloitte 2024 · HBR/Gallup"],["Désorganisation",res.roiDesorganisation,"N. Chusseau, Univ. Lille 2023"],["RPS / Arrêts longs",res.roiRps,"OCIRP 2023 · Verlingue 2023"],["Marque employeur",res.roiMarque,"Études RH 2024-2025"]].forEach(([l,v,src])=>{
           doc.setFontSize(9); doc.setTextColor(24,38,63); doc.setFont("helvetica","bold"); doc.text(l,M,y); doc.text(`${fmt(v)} €`,W-M,y,{align:"right"});
-          doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(143,19,73); doc.text(`📎 ${src}`,M,y+4); y+=9;
+          doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(143,19,73); doc.text(`${src}`,M,y+4); y+=9;
         }); y+=2;
         // Total
         doc.setFillColor(220,252,245); doc.roundedRect(M,y-4,W-2*M,16,2,2,"F");
@@ -270,7 +269,7 @@
         if(!validate(4))return; setSending(true);
         const r=calc(); const sec=data.secteur==="Autre"?data.secteurAutre:data.secteur;
         // Payload Resend (Vercel Function)
-        const payload={nom:data.nom,entreprise:data.entreprise,secteur:sec,fonction:data.fonction,effectif:data.effectif,tranche_age:AGE_OPTIONS.find(a=>a.value===data.trancheAge)?.label||"",salaire_moyen:fmt(Number(data.salaireMoyen)),taux_absenteisme:data.tauxAbsenteisme,nb_departs:data.nbDeparts,email:data.email,n_aidants:r.nAidants,fuite_financiere:fmt(r.fuiteFinanciere),roi_total:fmt(r.roiTotal),score_csrd:r.scoreCsrd,roi_pct:r.roiPct,roi_absenteisme:fmt(r.roiAbsenteisme),roi_presenteisme:fmt(r.roiPresenteisme),roi_turnover:fmt(r.roiTurnover),roi_desorganisation:fmt(r.roiDesorganisation),roi_rps:fmt(r.roiRps),roi_marque:fmt(r.roiMarque),investissement:fmt(r.investissement),nb_contrats:r.nbContrats,culture_manager:MANAGER_OPTIONS.find(m=>m.value===data.cultureManager)?.label||"",dispositifs:data.dispositifs.map(d=>DISPOSITIFS.find(x=>x.value===d)?.label).join(", "),pilotage_data:data.pilotageData==="oui"?"Oui":"Non",mesures_csrd:data.mesuresCsrd.map(m=>MESURES_CSRD.find(x=>x.value===m)?.label).join(", ")+(data.mesuresCsrdAutre?" | Autre : "+data.mesuresCsrdAutre:""),contrat_creche:data.contratCreche==="oui"?"✅ OUI — Opportunité Care":"Non"};
+        const payload={nom:data.nom,entreprise:data.entreprise,secteur:sec,fonction:data.fonction,effectif:data.effectif,tranche_age:AGE_OPTIONS.find(a=>a.value===data.trancheAge)?.label||"",salaire_moyen:fmt(Number(data.salaireMoyen)),taux_absenteisme:data.tauxAbsenteisme,nb_departs:data.nbDeparts,email:data.email,n_aidants:r.nAidants,fuite_financiere:fmt(r.fuiteFinanciere),roi_total:fmt(r.roiTotal),score_csrd:r.scoreCsrd,roi_pct:r.roiPct,roi_absenteisme:fmt(r.roiAbsenteisme),roi_presenteisme:fmt(r.roiPresenteisme),roi_turnover:fmt(r.roiTurnover),roi_desorganisation:fmt(r.roiDesorganisation),roi_rps:fmt(r.roiRps),roi_marque:fmt(r.roiMarque),investissement:fmt(r.investissement),nb_contrats:r.nbContrats,culture_manager:MANAGER_OPTIONS.find(m=>m.value===data.cultureManager)?.label||"",dispositifs:data.dispositifs.map(d=>DISPOSITIFS.find(x=>x.value===d)?.label).join(", "),pilotage_data:data.pilotageData==="oui"?"Oui":"Non",mesures_csrd:data.mesuresCsrd.map(m=>MESURES_CSRD.find(x=>x.value===m)?.label).join(", ")+(data.mesuresCsrdAutre?" | Autre : "+data.mesuresCsrdAutre:""),contrat_creche:data.contratCreche==="oui"?"OUI — Opportunité Care":"Non"};
         // Envoi via Vercel Function (Resend) — 1 seul appel pour les 2 emails
         try { await fetch("/api/send-email",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); } catch(err){ console.log("Send email:",err); }
         setTimeout(()=>{setSending(false);setShowResult(true);scrollTop();},1500);
@@ -283,7 +282,7 @@
         const bw=(v)=>Math.max(5,(v/maxR)*100);
         const roiItems=[{l:"Absentéisme",v:r.roiAbsenteisme,c:COLORS.magenta,d:"51% des aidants ont eu un arrêt maladie en 2024 vs 42% des non-aidants. L'accompagnement réduit les absences liées à l'épuisement et aux urgences familiales.",src:"Baromètre Malakoff Humanis 2025 · OCIRP/Viavoice 2023"},{l:"Présentéisme",v:r.roiPresenteisme,c:COLORS.orange,d:"82% des aidants manquent de temps et 1/3 surcompensent pour masquer une baisse de productivité. Le soutien libère la charge mentale et restaure la concentration.",src:"OCIRP/Viavoice 2023 · Études présentéisme 2023"},{l:"Turnover",v:r.roiTurnover,c:COLORS.navy,d:"44% des aidants craignent de perdre leur emploi. Remplacer un salarié coûte 6 à 9 mois de salaire. Un dispositif dédié fidélise les talents à risque de départ.",src:"OCIRP 2023 · Deloitte 2024 · Harvard Business Review / Gallup 2021-2024"},{l:"Désorganisation",v:r.roiDesorganisation,c:COLORS.amber,d:"Les absences imprévues désorganisent les équipes, surchargent les collègues et génèrent des retards en chaîne. Le care management anticipe et fluidifie.",src:"Nathalie Chusseau, Université de Lille 2023 · France Info"},{l:"RPS / Arrêts longs",v:r.roiRps,c:COLORS.red,d:"51% des aidants renoncent à consulter un médecin. Sans accompagnement, la charge mentale conduit à des arrêts longue durée (burn-out, dépression).",src:"OCIRP/Viavoice 2023 · Verlingue 2023 · Verspieren 2025"},{l:"Marque employeur",v:r.roiMarque,c:COLORS.green,d:"Une marque employeur engagée réduit les coûts de recrutement de 43%. 90% des DRH soutiennent l'inscription du soutien aux aidants dans la RSE.",src:"Études RH 2024-2025 · OCIRP/Viavoice 2023"}];
         const csrdL=r.scoreCsrd>=60?"Maturité avancée":r.scoreCsrd>=30?"En progression":"Vulnérabilité élevée";
-        const csrdE=r.scoreCsrd>=60?"🟢":r.scoreCsrd>=30?"🟡":"🔴";
+        
         const csrdC=r.scoreCsrd>=60?COLORS.green:r.scoreCsrd>=30?COLORS.amber:COLORS.red;
         const csrdBg=r.scoreCsrd>=60?COLORS.greenLight:r.scoreCsrd>=30?COLORS.amberLight:COLORS.redLight;
 
@@ -305,7 +304,7 @@
                   </div>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 18px",borderRadius:14,background:COLORS.orangeLight}}>
                     <div><div style={{fontSize:11,fontWeight:500,color:COLORS.navy}}>Coût / jour</div><div style={{fontSize:18,fontWeight:700,color:COLORS.orange}}>{fmt(r.coutJour)} €</div></div>
-                    <div style={{fontSize:22}}>📊</div>
+                    <div style={{fontSize:22}}></div>
                   </div>
                   <div style={{textAlign:"center",padding:"16px 12px",background:COLORS.redLight,borderRadius:14,display:"flex",flexDirection:"column",justifyContent:"center"}}>
                     <div style={{fontSize:11,color:COLORS.red,fontWeight:600,marginBottom:2}}>💸 Fuite financière annuelle</div>
@@ -313,15 +312,15 @@
                     <div style={{fontSize:10,color:COLORS.textMuted,marginTop:2}}>{r.nAidants} × 16 j × {fmt(r.coutJour)} €</div>
                   </div>
                 </div>
-                <div style={{fontSize:11,color:COLORS.textMuted,lineHeight:1.5,marginBottom:20,padding:"0 4px"}}><strong>Méthode :</strong> aidants estimés selon la tranche d'âge (12% si &lt; 35 ans, 20% entre 35-45 ans, 32% si &gt; 45 ans). Coût journalier sur 218 jours ouvrés. <strong>16 jours</strong> = moyenne d'absence annuelle supplémentaire constatée chez les salariés aidants (arrêts, congés sans solde, absences non déclarées).<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>📎 OCIRP/Viavoice 2023 · Baromètre Malakoff Humanis 2025 · France Travail 2024 · Nathalie Chusseau, Univ. de Lille 2023</span></div>
+                <div style={{fontSize:11,color:COLORS.textMuted,lineHeight:1.5,marginBottom:20,padding:"0 4px"}}><strong>Méthode :</strong> aidants estimés selon la tranche d'âge (12% si &lt; 35 ans, 20% entre 35-45 ans, 32% si &gt; 45 ans). Coût journalier sur 218 jours ouvrés. <strong>16 jours</strong> = moyenne d'absence annuelle supplémentaire constatée chez les salariés aidants (arrêts, congés sans solde, absences non déclarées).<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>OCIRP/Viavoice 2023 · Baromètre Malakoff Humanis 2025 · France Travail 2024 · Nathalie Chusseau, Univ. de Lille 2023</span></div>
 
                 <div style={s.divider}/>
 
                 {/* SECTION 3 — Score CSRD actuel (état des lieux) */}
                 <div style={{marginBottom:24,padding:"20px 18px",background:"#FFF",border:`2px solid ${COLORS.border}`,borderRadius:14}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}}>
-                    <div style={{fontSize:15,fontWeight:700,color:COLORS.navy}}>🏛️ Votre Score CSRD aujourd'hui</div>
-                    <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:700,background:csrdBg,color:csrdC}}>{csrdE} {csrdL}</div>
+                    <div style={{fontSize:15,fontWeight:700,color:COLORS.navy}}>Votre Score CSRD aujourd'hui</div>
+                    <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:700,background:csrdBg,color:csrdC}}>{csrdL}</div>
                   </div>
                   <div style={{width:"100%",height:10,borderRadius:5,background:COLORS.border,position:"relative",marginTop:8,marginBottom:6}}>
                     <div style={{height:"100%",borderRadius:5,background:csrdC,width:`${r.scoreCsrd}%`,transition:"width 1s ease-out"}}/>
@@ -329,14 +328,14 @@
                   <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:COLORS.textMuted}}>
                     <span>0</span><span style={{fontWeight:700,color:csrdC,fontSize:14}}>{r.scoreCsrd}/100</span><span>100</span>
                   </div>
-                  <div style={{fontSize:12,color:COLORS.textMuted,lineHeight:1.5,marginTop:10}}>Évalue votre préparation au pilier social CSRD (ESRS S1) : formation managers, dispositifs existants, pilotage KPI sociaux. {r.scoreCsrd < 60 ? "Score < 60 = axes d'amélioration prioritaires avant 2026." : "Maturité solide."}<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>📎 Directive CSRD / ESRS S1 · OCIRP 2023</span></div>
+                  <div style={{fontSize:12,color:COLORS.textMuted,lineHeight:1.5,marginTop:10}}>Évalue votre préparation au pilier social CSRD (ESRS S1) : formation managers, dispositifs existants, pilotage KPI sociaux. {r.scoreCsrd < 60 ? "Score < 60 = axes d'amélioration prioritaires avant 2026." : "Maturité solide."}<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>Directive CSRD / ESRS S1 · OCIRP 2023</span></div>
                 </div>
 
                 <div style={s.divider}/>
 
                 {/* SECTION 4 — ROI récupérable par poste */}
                 <div style={{marginBottom:20}}>
-                  <div style={{fontSize:15,fontWeight:700,color:COLORS.navy,marginBottom:14}}>📈 ROI récupérable par poste</div>
+                  <div style={{fontSize:15,fontWeight:700,color:COLORS.navy,marginBottom:14}}>ROI récupérable par poste</div>
                   <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?"0":"0 20px"}}>
                     {roiItems.map(it=>(
                       <div key={it.l} style={{marginBottom:14}}>
@@ -346,7 +345,7 @@
                           <div style={{width:70,textAlign:"right",fontSize:13,fontWeight:700,color:it.c,flexShrink:0}}>{fmt(it.v)} €</div>
                         </div>
                         <div style={{fontSize:11,color:COLORS.textMuted,lineHeight:1.4,padding:"2px 14px 0"}}>{it.d}</div>
-                        <div style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",padding:"2px 14px 0",opacity:0.7}}>📎 {it.src}</div>
+                        <div style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",padding:"2px 14px 0",opacity:0.7}}>{it.src}</div>
                       </div>
                     ))}
                   </div>
@@ -354,18 +353,18 @@
 
                 {/* SECTION 5 — Gain potentiel total */}
                 <div style={{textAlign:"center",marginBottom:8,padding:"22px 16px",background:COLORS.greenLight,borderRadius:14,border:`2px solid ${COLORS.green}30`}}>
-                  <div style={{fontSize:13,color:COLORS.green,fontWeight:600,marginBottom:6}}>✅ Gain potentiel total avec accompagnement</div>
+                  <div style={{fontSize:13,color:COLORS.green,fontWeight:600,marginBottom:6}}>Gain potentiel total avec accompagnement</div>
                   <div style={{...s.bigNum,color:COLORS.green,fontSize:isMobile?34:40}}>{fmt(r.roiTotal)} €<span style={{fontSize:18}}>/an</span></div>
                 </div>
-                <div style={{fontSize:11,color:COLORS.textMuted,lineHeight:1.5,marginBottom:20,padding:"0 4px"}}><strong>Comment est calculé ce gain ?</strong> Somme des économies récupérables sur les 6 postes, taux de récupération conservateur de 25 à 30%.<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>📎 Baromètre Malakoff Humanis 2025 · Deloitte 2024 · Harvard Business Review / Gallup 2021-2024</span></div>
+                <div style={{fontSize:11,color:COLORS.textMuted,lineHeight:1.5,marginBottom:20,padding:"0 4px"}}><strong>Comment est calculé ce gain ?</strong> Somme des économies récupérables sur les 6 postes, taux de récupération conservateur de 25 à 30%.<br/><span style={{fontSize:10,color:COLORS.magenta,fontStyle:"italic",opacity:0.7}}>Baromètre Malakoff Humanis 2025 · Deloitte 2024 · Harvard Business Review / Gallup 2021-2024</span></div>
 
                 <div style={s.divider}/>
 
                 {/* SECTION 6 — Score CSRD MIROIR projeté avec Vivalea */}
                 <div style={{marginBottom:24,padding:"20px 18px",background:COLORS.greenLight,border:`2px solid ${COLORS.green}`,borderRadius:14}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,flexWrap:"wrap",gap:8}}>
-                    <div style={{fontSize:15,fontWeight:700,color:COLORS.navy}}>🎯 Score CSRD projeté avec Vivalea Care</div>
-                    <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:700,background:COLORS.green,color:"#fff"}}>✅ Conforme CSRD</div>
+                    <div style={{fontSize:15,fontWeight:700,color:COLORS.navy}}>Score CSRD projeté avec Vivalea Care</div>
+                    <div style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 14px",borderRadius:20,fontSize:12,fontWeight:700,background:COLORS.green,color:"#fff"}}>Conforme CSRD</div>
                   </div>
                   <div style={{width:"100%",height:10,borderRadius:5,background:COLORS.border,position:"relative",marginTop:8,marginBottom:6}}>
                     <div style={{height:"100%",borderRadius:5,background:COLORS.green,width:"80%",transition:"width 1.5s ease-out"}}/>
@@ -373,14 +372,14 @@
                   <div style={{display:"flex",justifyContent:"space-between",fontSize:12,color:COLORS.textMuted}}>
                     <span>0</span><span style={{fontWeight:700,color:COLORS.green,fontSize:14}}>80/100</span><span>100</span>
                   </div>
-                  <div style={{fontSize:12,color:COLORS.textMuted,lineHeight:1.5,marginTop:10}}>Avec l'accompagnement Vivalea Care : formation managers complète, dispositifs structurés, pilotage KPI sociaux opérationnel. Conformité ESRS S1 acquise et reporting CSRD documenté.<br/><span style={{fontSize:10,color:COLORS.green,fontWeight:600,marginTop:4,display:"inline-block"}}>↗ Progression projetée : +{Math.max(0, 80 - r.scoreCsrd)} points</span></div>
+                  <div style={{fontSize:12,color:COLORS.textMuted,lineHeight:1.5,marginTop:10}}>Avec l'accompagnement Vivalea Care : formation managers complète, dispositifs structurés, pilotage KPI sociaux opérationnel. Conformité ESRS S1 acquise et reporting CSRD documenté.<br/><span style={{fontSize:10,color:COLORS.green,fontWeight:600,marginTop:4,display:"inline-block"}}>Progression projetée : +{Math.max(0, 80 - r.scoreCsrd)} points</span></div>
                 </div>
 
                 <div style={s.divider}/>
 
                 {/* SECTION 7 — Investissement Vivalea + ROI */}
                 <div style={{marginBottom:20,padding:"22px 18px",background:COLORS.magentaLight,borderRadius:14,border:`1px solid ${COLORS.magenta}30`}}>
-                  <div style={{fontSize:13,color:COLORS.magenta,fontWeight:700,marginBottom:16,textTransform:"uppercase",letterSpacing:0.5,textAlign:"center"}}>💼 L'équation Vivalea Care</div>
+                  <div style={{fontSize:13,color:COLORS.magenta,fontWeight:700,marginBottom:16,textTransform:"uppercase",letterSpacing:0.5,textAlign:"center"}}>L'équation Vivalea Care</div>
                   <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr auto 1fr",gap:isMobile?12:10,alignItems:"center"}}>
                     <div style={{padding:"18px 16px",background:"#FFF",borderRadius:12,textAlign:"center"}}>
                       <div style={{fontSize:12,color:COLORS.textMuted,marginBottom:4}}>Investissement Vivalea</div>
@@ -399,7 +398,7 @@
 
                 {/* SECTION 8 — CTAs */}
                 <div style={{marginTop:24}}>
-                  <button style={{...s.btnS,width:"100%",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"14px 20px"}} onClick={()=>{try{const pdf=genPDF(calc(),false);pdf.save(`Diagnostic-Aidance-${data.entreprise.replace(/\s+/g,"-")}.pdf`);}catch(err){console.log("PDF:",err);}}}>📄 Télécharger le rapport PDF</button>
+                  <button style={{...s.btnS,width:"100%",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8,padding:"14px 20px"}} onClick={()=>{try{const pdf=genPDF(calc(),false);pdf.save(`Diagnostic-Aidance-${data.entreprise.replace(/\s+/g,"-")}.pdf`);}catch(err){console.log("PDF:",err);}}}>Télécharger le rapport PDF</button>
                   <button style={{...s.btnP(false),padding:"16px 20px",fontSize:isMobile?13:15}} onClick={()=>window.open("https://calendly.com/vivalea","_blank")}>Prendre un moment pour détailler ensemble votre simulation →</button>
                   <div style={{textAlign:"center",fontSize:11,color:COLORS.textMuted,marginTop:10}}>30 min · Gratuit · Sans engagement</div>
                 </div>
@@ -442,7 +441,7 @@
           <div style={s.stepSub}>L'absentéisme et le turnover cachent souvent un problème d'aidance non diagnostiqué.</div>
           <div style={s.fg}><label style={s.label}>Taux d'absentéisme global actuel <span style={s.sublabel}>(%)</span></label><div style={{position:"relative"}}><input style={{...s.input,paddingRight:36}} type="number" placeholder="Ex : 5" min="0" max="100" step="0.1" value={data.tauxAbsenteisme} onChange={e=>update("tauxAbsenteisme",e.target.value)}/><span style={{position:"absolute",right:16,top:"50%",transform:"translateY(-50%)",color:COLORS.textMuted,fontSize:14,fontWeight:600}}>%</span></div>{errors.tauxAbsenteisme&&<div style={s.err}>{errors.tauxAbsenteisme}</div>}</div>
           <div style={s.fg}><label style={s.label}>Départs sur les 12 derniers mois <span style={s.sublabel}>(démissions / ruptures)</span></label><input style={s.input} type="number" placeholder="Ex : 20" min="0" value={data.nbDeparts} onChange={e=>update("nbDeparts",e.target.value)}/>{errors.nbDeparts&&<div style={s.err}>{errors.nbDeparts}</div>}</div>
-          <div style={{padding:"14px 16px",background:COLORS.orangeLight,borderRadius:12,marginBottom:20,fontSize:12,color:COLORS.navy,lineHeight:1.6}}><strong style={{color:COLORS.orange}}>💡 Le saviez-vous ?</strong><br/>51% des aidants ont eu au moins un arrêt maladie en 2024, contre 42% des non-aidants. 75% ne préviennent pas leur employeur.</div>
+          <div style={{padding:"14px 16px",background:COLORS.orangeLight,borderRadius:12,marginBottom:20,fontSize:12,color:COLORS.navy,lineHeight:1.6}}><strong style={{color:COLORS.orange}}>Le saviez-vous ?</strong><br/>51% des aidants ont eu au moins un arrêt maladie en 2024, contre 42% des non-aidants. 75% ne préviennent pas leur employeur.</div>
           <div style={s.navRow}><button style={s.btnS} onClick={goBack}>← Retour</button><button style={{...s.btnP(false),flex:1}} onClick={goNext}>Continuer →</button></div>
         </div>,
         /* P4 */
@@ -463,14 +462,14 @@
           <div style={s.stepTitle}>Dernière étape</div>
           <div style={s.stepSub}>Renseignez votre email professionnel pour recevoir votre rapport CODIR personnalisé de 3 pages : calcul de ROI, score CSRD et plan d'action.</div>
           <div style={s.fg}><label style={s.label}>Votre email professionnel</label><input style={s.input} type="email" placeholder="prenom.nom@entreprise.fr" value={data.email} onChange={e=>update("email",e.target.value)}/>{errors.email&&<div style={s.err}>{errors.email}</div>}</div>
-          <div style={{padding:"14px 16px",background:COLORS.greenLight,borderRadius:12,marginBottom:20,fontSize:12,color:COLORS.navy,lineHeight:1.6}}><strong style={{color:COLORS.green}}>🔒 Confidentialité garantie</strong><br/>Vos données sont traitées de manière strictement confidentielle et ne seront jamais communiquées à des tiers. Ce diagnostic est un outil d'aide à la décision, pas un engagement.</div>
+          <div style={{padding:"14px 16px",background:COLORS.greenLight,borderRadius:12,marginBottom:20,fontSize:12,color:COLORS.navy,lineHeight:1.6}}><strong style={{color:COLORS.green}}>Confidentialité garantie</strong><br/>Vos données sont traitées de manière strictement confidentielle et ne seront jamais communiquées à des tiers. Ce diagnostic est un outil d'aide à la décision, pas un engagement.</div>
           <div style={s.navRow}><button style={s.btnS} onClick={goBack}>← Retour</button><button style={{...s.btnP(sending),flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:8}} onClick={goNext} disabled={sending}>{sending?<><span style={{display:"inline-block",width:16,height:16,border:"2px solid #fff4",borderTopColor:"#fff",borderRadius:"50%",animation:"spin 0.6s linear infinite"}}/>Génération en cours...</>:"Générer mon Diagnostic →"}</button></div>
         </div>,
       ];
 
       return (
         <div style={{...s.container,maxWidth:step===3&&!isMobile?780:580,transition:"max-width 0.3s ease"}} ref={cardRef}>
-          <div style={s.header}><div style={s.logoBar}><span style={s.logoText}>Vivalea</span><span style={s.tagline}>Care</span></div><div style={s.badge}>🏛️ Diagnostic CSRD 2026 · Gratuit · Confidentiel</div></div>
+          <div style={s.header}><div style={s.logoBar}><span style={s.logoText}>Vivalea</span><span style={s.tagline}>Care</span></div><div style={s.badge}>Diagnostic CSRD 2026 · Gratuit · Confidentiel</div></div>
           <ProgressBar step={step} total={5}/>
           {steps[step]}
           <div style={s.footer}>Vivalea · Entreprise à impact et ESS · Simulation indicative, non contractuelle.<br/>Vos données sont traitées de manière confidentielle.</div>
