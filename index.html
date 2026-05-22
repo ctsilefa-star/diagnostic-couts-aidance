@@ -199,6 +199,8 @@
           throw new Error("jsPDF library not available");
         }
         const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:"mm",format:"a4"}); const W=210,M=18; const sec=data.secteur==="Autre"?data.secteurAutre:data.secteur; let y=20;
+        // Formatage nombres compatible jsPDF (remplace espaces insécables U+202F/U+00A0 par espace normal)
+        const fmtPDF=(n)=>fmt(n).replace(/[\u202f\u00a0]/g," ");
         // Header
         doc.setFillColor(248,246,244); doc.rect(0,0,W,42,"F");
         doc.setFontSize(10); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("VIVALEA CARE",M,14);
@@ -222,25 +224,25 @@
         doc.setFontSize(16); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text(`${res.nAidants}`,M+4,y+10);
         doc.setFillColor(248,246,244); doc.roundedRect(M+58,y-4,52,18,2,2,"F");
         doc.setFontSize(9); doc.setTextColor(107,114,128); doc.setFont("helvetica","normal"); doc.text("Coût / jour",M+62,y+1);
-        doc.setFontSize(16); doc.setTextColor(233,85,46); doc.setFont("helvetica","bold"); doc.text(`${fmt(res.coutJour)} €`,M+62,y+10);
+        doc.setFontSize(16); doc.setTextColor(233,85,46); doc.setFont("helvetica","bold"); doc.text(`${fmtPDF(res.coutJour)} €`,M+62,y+10);
         doc.setFillColor(255,230,230); doc.roundedRect(M+116,y-4,58,18,2,2,"F");
         doc.setFontSize(9); doc.setTextColor(220,38,38); doc.setFont("helvetica","normal"); doc.text("Fuite financière / an",M+120,y+1);
-        doc.setFontSize(16); doc.setFont("helvetica","bold"); doc.text(`${fmt(res.fuiteFinanciere)} €`,M+120,y+10);
+        doc.setFontSize(16); doc.setFont("helvetica","bold"); doc.text(`${fmtPDF(res.fuiteFinanciere)} €`,M+120,y+10);
         y+=24;
         doc.setFontSize(8); doc.setTextColor(107,114,128); doc.setFont("helvetica","normal");
-        doc.text(`Méthode : ${res.nAidants} aidants × 16 jours × ${fmt(res.coutJour)} €/jour`,M,y); y+=4;
+        doc.text(`Méthode : ${res.nAidants} aidants × 16 jours × ${fmtPDF(res.coutJour)} €/jour`,M,y); y+=4;
         doc.setFontSize(7); doc.setTextColor(143,19,73); doc.text("Sources : OCIRP/Viavoice 2023 · Malakoff Humanis 2025 · France Travail 2024",M,y); y+=8;
         doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=6;
         // ROI
         doc.setFontSize(11); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("ROI RÉCUPÉRABLE PAR POSTE",M,y); y+=6;
         [["Absentéisme",res.roiAbsenteisme,"Malakoff Humanis 2025"],["Présentéisme",res.roiPresenteisme,"OCIRP/Viavoice 2023"],["Turnover",res.roiTurnover,"Deloitte 2024 · HBR/Gallup"],["Désorganisation",res.roiDesorganisation,"N. Chusseau, Univ. Lille 2023"],["RPS / Arrêts longs",res.roiRps,"OCIRP 2023 · Verlingue 2023"],["Marque employeur",res.roiMarque,"Études RH 2024-2025"]].forEach(([l,v,src])=>{
-          doc.setFontSize(9); doc.setTextColor(24,38,63); doc.setFont("helvetica","bold"); doc.text(l,M,y); doc.text(`${fmt(v)} €`,W-M,y,{align:"right"});
+          doc.setFontSize(9); doc.setTextColor(24,38,63); doc.setFont("helvetica","bold"); doc.text(l,M,y); doc.text(`${fmtPDF(v)} €`,W-M,y,{align:"right"});
           doc.setFont("helvetica","normal"); doc.setFontSize(7); doc.setTextColor(143,19,73); doc.text(`${src}`,M,y+4); y+=9;
         }); y+=2;
         // Total
         doc.setFillColor(220,252,245); doc.roundedRect(M,y-4,W-2*M,16,2,2,"F");
         doc.setFontSize(10); doc.setTextColor(15,118,110); doc.setFont("helvetica","bold"); doc.text("Gain potentiel total avec accompagnement",M+4,y+2);
-        doc.setFontSize(18); doc.text(`${fmt(res.roiTotal)} € /an`,W-M-4,y+8,{align:"right"}); y+=22;
+        doc.setFontSize(18); doc.text(`${fmtPDF(res.roiTotal)} € /an`,W-M-4,y+8,{align:"right"}); y+=22;
         doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=6;
         // CSRD
         doc.setFontSize(11); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("SCORE DE MATURITÉ CSRD",M,y); y+=6;
@@ -253,8 +255,9 @@
         doc.setDrawColor(200); doc.line(M,y,W-M,y); y+=6;
         // Investissement
         doc.setFontSize(11); doc.setTextColor(143,19,73); doc.setFont("helvetica","bold"); doc.text("L'ÉQUATION VIVALEA CARE",M,y); y+=6;
-        doc.setFontSize(10); doc.setTextColor(24,38,63);
-        doc.text(`Investissement Vivalea (à partir de) : ${fmt(res.investissement)} €/an`,M,y); doc.text(`ROI : ${res.roiPct}%`,W/2,y); y+=5;
+        doc.setFontSize(10); doc.setTextColor(24,38,63); doc.setFont("helvetica","bold");
+        doc.text(`Investissement Vivalea (à partir de) : ${fmtPDF(res.investissement)} €/an`,M,y); y+=6;
+        doc.setTextColor(143,19,73); doc.text(`Retour sur investissement : ${res.roiPct}%`,M,y); y+=5;
         doc.setFontSize(8); doc.setFont("helvetica","normal"); doc.setTextColor(107,114,128);
         doc.text(`Retour sur investissement constaté dès 6 mois`,M,y); y+=10;
         // Footer
