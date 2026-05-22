@@ -20,7 +20,7 @@ const header = (badge, title, subtitle) => `
 
 const section = (icon, title, content, bgColor = "transparent") => `
   <div style="padding:24px 32px;border-bottom:1px solid ${C.border};${bgColor !== "transparent" ? `background:${bgColor};` : ""}">
-    <div style="font-size:11px;color:${C.magenta};font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;">${icon} ${esc(title)}</div>
+    <div style="font-size:11px;color:${C.magenta};font-weight:700;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px;">${icon ? icon + " " : ""}${esc(title)}</div>
     ${content}
   </div>`;
 
@@ -58,21 +58,21 @@ function buildInternalEmail(d) {
       ${kpiCard("Gain potentiel", `${esc(d.roi_total)} €`, C.green)}
     </div>
   </div>
-  ${section("📇", "Coordonnées du lead", table(
+  ${section("", "Coordonnées du lead", table(
     row("Nom", d.nom, {bold: true}) +
     row("Entreprise", d.entreprise, {bold: true}) +
     row("Email", `<a href="mailto:${esc(d.email)}" style="color:${C.magenta};text-decoration:none;">${esc(d.email)}</a>`, {raw: true}) +
     row("Fonction", d.fonction) +
     row("Secteur", d.secteur)
   ))}
-  ${section("🏢", "Profil entreprise", table(
+  ${section("", "Profil entreprise", table(
     row("Effectif (ETP)", fmt(d.effectif), {bold: true}) +
     row("Tranche d'âge majoritaire", d.tranche_age) +
     row("Salaire moyen chargé", `${esc(d.salaire_moyen)} €`) +
     row("Taux d'absentéisme", `${esc(d.taux_absenteisme)}%`) +
     row("Départs sur 12 mois", d.nb_departs)
   ))}
-  ${section("📊", "Diagnostic calculé — détail ROI", table(
+  ${section("", "Diagnostic calculé — détail ROI", table(
     row("Score CSRD actuel", `${esc(d.score_csrd)}/100`, {bold: true, color: C.magenta}) +
     row("ROI Absentéisme", `${esc(d.roi_absenteisme)} €`) +
     row("ROI Présentéisme", `${esc(d.roi_presenteisme)} €`) +
@@ -81,12 +81,12 @@ function buildInternalEmail(d) {
     row("ROI RPS / Arrêts longs", `${esc(d.roi_rps)} €`) +
     row("ROI Marque employeur", `${esc(d.roi_marque)} €`)
   ), C.bg)}
-  ${section("💰", "Investissement & ROI projeté", table(
+  ${section("", "Investissement & ROI projeté", table(
     row("Investissement Vivalea", `${esc(d.investissement)} €`, {bold: true}) +
     row("Nombre de contrats", `${esc(d.nb_contrats)} contrats`) +
     row("ROI %", `${esc(d.roi_pct)}%`, {bold: true, color: C.green})
   ))}
-  ${section("🎯", "Intelligence commerciale", table(
+  ${section("", "Intelligence commerciale", table(
     row("Culture managers", d.culture_manager) +
     row("Dispositifs existants", d.dispositifs) +
     row("Pilotage data", d.pilotage_data) +
@@ -111,11 +111,11 @@ function buildProspectEmail(d) {
       ${kpiCard("Fuite annuelle", `${esc(d.fuite_financiere)} €`, C.red)}
     </div>
     <div style="background:#E6F5F0;padding:18px;border-radius:10px;text-align:center;border:1px solid ${C.green}33;">
-      <div style="font-size:12px;color:${C.green};font-weight:600;margin-bottom:4px;letter-spacing:0.05em;">✅ GAIN POTENTIEL ANNUEL</div>
+      <div style="font-size:12px;color:${C.green};font-weight:600;margin-bottom:4px;letter-spacing:0.05em;">GAIN POTENTIEL ANNUEL</div>
       <div style="font-size:30px;font-weight:700;color:${C.green};line-height:1.1;">${esc(d.roi_total)} €<span style="font-size:16px;font-weight:400;">/an</span></div>
     </div>
   </div>
-  ${section("📋", "Récapitulatif de votre saisie", table(
+  ${section("", "Récapitulatif de votre saisie", table(
     row("Entreprise", d.entreprise, {bold: true}) +
     row("Secteur", d.secteur) +
     row("Votre fonction", d.fonction) +
@@ -125,7 +125,7 @@ function buildProspectEmail(d) {
     row("Taux d'absentéisme", `${esc(d.taux_absenteisme)}%`) +
     row("Départs sur 12 mois", d.nb_departs)
   ))}
-  ${section("📈", "ROI récupérable par poste", table(
+  ${section("", "ROI récupérable par poste", table(
     row("Absentéisme", `${esc(d.roi_absenteisme)} €`) +
     row("Présentéisme", `${esc(d.roi_presenteisme)} €`) +
     row("Turnover", `${esc(d.roi_turnover)} €`) +
@@ -133,7 +133,7 @@ function buildProspectEmail(d) {
     row("RPS / Arrêts longs", `${esc(d.roi_rps)} €`) +
     row("Marque employeur", `${esc(d.roi_marque)} €`)
   ), C.bg)}
-  ${section("🏛️", "Votre Score CSRD", `
+  ${section("", "Votre Score CSRD", `
     <div style="display:flex;gap:14px;align-items:center;">
       <div style="flex:1;padding:18px;background:${C.bg};border-radius:10px;border:1px solid ${C.border};text-align:center;">
         <div style="font-size:11px;color:${C.muted};margin-bottom:6px;">Aujourd'hui</div>
@@ -147,7 +147,7 @@ function buildProspectEmail(d) {
     </div>
     <div style="font-size:12px;color:${C.muted};margin-top:14px;line-height:1.5;">Avec l'accompagnement Vivalea Care : formation managers, dispositifs structurés et pilotage KPI sociaux. Conformité ESRS S1 acquise.</div>
   `)}
-  ${section("💼", "L'équation Vivalea Care", `
+  ${section("", "L'équation Vivalea Care", `
     <table style="width:100%;border-collapse:collapse;">
       <tr>
         <td style="width:46%;background:${C.white};border-radius:12px;padding:18px 14px;text-align:center;vertical-align:middle;">
@@ -204,10 +204,10 @@ export default async function handler(req, res) {
   }
   
   try {
-    // 1️⃣ Email INTERNE
+    // 1⃣ Email INTERNE
     const internal = await sendEmail({
       from: FROM, to: [INTERNAL_TO], reply_to: data.email,
-      subject: `🎯 Nouveau lead Diagnostic — ${data.entreprise} (${data.secteur})`,
+      subject: `Nouveau lead Diagnostic — ${data.entreprise} (${data.secteur})`,
       html: buildInternalEmail(data),
     }, "INTERNAL");
     
@@ -216,10 +216,10 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Internal email failed", details: internal.result });
     }
     
-    // ⏱️ Délai pour respecter le rate-limit Resend
+    // ⏱ Délai pour respecter le rate-limit Resend
     await sleep(700);
     
-    // 2️⃣ Email PROSPECT
+    // 2⃣ Email PROSPECT
     const prospect = await sendEmail({
       from: FROM, to: [data.email], reply_to: INTERNAL_TO,
       subject: `Votre Diagnostic Vivalea Care — ${data.entreprise}`,

@@ -211,7 +211,7 @@
           doc.setFont("helvetica","normal");
           doc.text(`Nom : ${data.nom}`,M+4,y+8); doc.text(`Email : ${data.email}`,M+4,y+13);
           doc.text(`Fonction : ${data.fonction}`,M+4,y+18);
-          doc.text(`Crèche partenaire : ${data.contratCreche==="oui"?"OUI ✓":"Non"}`,W/2,y+8);
+          doc.text(`Crèche partenaire : ${data.contratCreche==="oui"?"OUI":"Non"}`,W/2,y+8);
           doc.text(`Dispositifs : ${data.dispositifs.map(d=>DISPOSITIFS.find(x=>x.value===d)?.label).join(", ")}`,M+4,y+23,{maxWidth:W-2*M-8});
           y+=34;
         }
@@ -300,14 +300,12 @@
                 <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr 1.4fr",gap:isMobile?10:14,marginTop:4,marginBottom:8}}>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 18px",borderRadius:14,background:COLORS.magentaLight}}>
                     <div><div style={{fontSize:11,fontWeight:500,color:COLORS.navy}}>Aidants estimés</div><div style={{fontSize:18,fontWeight:700,color:COLORS.magenta}}>{r.nAidants}</div></div>
-                    <div style={{fontSize:22}}>👥</div>
-                  </div>
+                    </div>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"16px 18px",borderRadius:14,background:COLORS.orangeLight}}>
                     <div><div style={{fontSize:11,fontWeight:500,color:COLORS.navy}}>Coût / jour</div><div style={{fontSize:18,fontWeight:700,color:COLORS.orange}}>{fmt(r.coutJour)} €</div></div>
-                    <div style={{fontSize:22}}></div>
-                  </div>
+                    </div>
                   <div style={{textAlign:"center",padding:"16px 12px",background:COLORS.redLight,borderRadius:14,display:"flex",flexDirection:"column",justifyContent:"center"}}>
-                    <div style={{fontSize:11,color:COLORS.red,fontWeight:600,marginBottom:2}}>💸 Fuite financière annuelle</div>
+                    <div style={{fontSize:11,color:COLORS.red,fontWeight:600,marginBottom:2}}>Fuite financière annuelle</div>
                     <div style={{...s.bigNum,color:COLORS.red,fontSize:isMobile?24:28}}>{fmt(r.fuiteFinanciere)} €</div>
                     <div style={{fontSize:10,color:COLORS.textMuted,marginTop:2}}>{r.nAidants} × 16 j × {fmt(r.coutJour)} €</div>
                   </div>
