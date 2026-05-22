@@ -6,13 +6,13 @@ Tu utilises tes **2 templates existants** dans ton dashboard EmailJS (https://da
 
 | Rôle | Template ID | Destinataire |
 |------|-------------|-------------|
-| Notification Vivalea | `template_427e77g` | ctsilefa@vivalea.fr |
+| Notification Vivalea | `template_427e77g` | lea@vivalea.fr |
 | Récap prospect | `template_8maoisj` | {{to_email}} |
 
 ---
 
 ### Template 1 : `template_427e77g`
-**Destinataire** : ctsilefa@vivalea.fr (notification interne)
+**Destinataire** : lea@vivalea.fr (notification interne)
 
 **Subject** :
 ```
@@ -225,7 +225,7 @@ Votre diagnostic — Coût de l'aidance chez {{entreprise}}
 1. Va sur https://dashboard.emailjs.com → **Email Templates**
 2. Clique sur le template existant (`template_427e77g` ou `template_8maoisj`)
 3. **To Email** :
-   - Template Vivalea (`template_427e77g`) : `ctsilefa@vivalea.fr`
+   - Template Vivalea (`template_427e77g`) : `lea@vivalea.fr`
    - Template Client (`template_8maoisj`) : `{{to_email}}`
 4. **Subject** : copie le sujet indiqué ci-dessus
 5. Passe en mode **HTML** (bouton `<>` dans l'éditeur)
@@ -273,7 +273,7 @@ Votre diagnostic — Coût de l'aidance chez {{entreprise}}
 Quand un prospect clique "Générer mon Diagnostic" :
 
 1. ✅ **PDF généré** côté client (jsPDF) → auto-download sur le poste du prospect
-2. ✅ **Email Vivalea** envoyé à ctsilefa@vivalea.fr avec :
+2. ✅ **Email Vivalea** envoyé à lea@vivalea.fr avec :
    - Coordonnées complètes du lead
    - Intelligence commerciale (crèche, dispositifs, mesures CSRD)
    - Rapport chiffré complet (ROI détaillé, score CSRD, investissement)
