@@ -21,7 +21,7 @@
   </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #F8F6F4; }
+    body { background: #F8F6F4; overflow-x: hidden; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
@@ -43,13 +43,14 @@
           document.documentElement.scrollHeight,
           document.body.offsetHeight,
           document.documentElement.offsetHeight
-        );
+        ) + 20; // buffer pour éviter les scrollbars
         if (window.parent !== window) {
           window.parent.postMessage({ type: 'vivalea-resize', height: height }, '*');
         }
       } catch(e) {}
     }
     window.addEventListener('load', sendHeightToParent);
+    window.addEventListener('resize', sendHeightToParent);
     setInterval(sendHeightToParent, 300);
     if (typeof ResizeObserver !== 'undefined') {
       new ResizeObserver(sendHeightToParent).observe(document.documentElement);
@@ -113,7 +114,7 @@
     const fmt = (n) => new Intl.NumberFormat("fr-FR").format(Math.round(n));
 
     const s = {
-      container: { fontFamily:"'DM Sans',sans-serif", maxWidth:580, margin:"0 auto", padding:"24px 16px", minHeight:"100vh", background:COLORS.bg, color:COLORS.navy },
+      container: { fontFamily:"'DM Sans',sans-serif", width:"100%", maxWidth:580, margin:"0 auto", padding:"24px 16px", background:COLORS.bg, color:COLORS.navy },
       header: { textAlign:"center", marginBottom:8 },
       logoBar: { display:"flex", alignItems:"center", justifyContent:"center", gap:8, marginBottom:16 },
       logoText: { fontFamily:"'DM Serif Display',serif", fontSize:22, color:COLORS.magenta, fontWeight:400 },
